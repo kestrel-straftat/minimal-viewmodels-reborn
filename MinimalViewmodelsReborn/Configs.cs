@@ -31,25 +31,25 @@ public static class Configs
             "Viewmodels.Visibility",
             "Viewmodel FOV",
             75f,
-            "Set the FOV of your viewmodel. A higher value will result in a smaller weapon."
+            "Set the FOV of the viewmodel camera."
         );
         ViewmodelOffsetX = config.Bind(
             "Viewmodels.Offset",
             "Viewmodel X Offset",
             0f,
-            new ConfigDescription("Negative values will shift your held weapon left, Positive values will shift it right.", new AcceptableValueRange<float>(-2, 2))
+            new ConfigDescription("Negative values will shift your held weapon left, Positive values will shift it right.", new AcceptableValueRange<float>(-5, 5))
         );
         ViewmodelOffsetY = config.Bind(
             "Viewmodels.Offset",
             "Viewmodel Y Offset",
             -0.1f,
-            new ConfigDescription("Negative values will shift your held weapon down, Positive values will shift it up.", new AcceptableValueRange<float>(-2, 2))
+            new ConfigDescription("Negative values will shift your held weapon down, Positive values will shift it up.", new AcceptableValueRange<float>(-5, 5))
         );
         ViewmodelOffsetZ = config.Bind(
             "Viewmodels.Offset",
             "Viewmodel Z Offset",
             0f,
-            new ConfigDescription("Negative values will shift your held weapon back, Positive values will shift it forward.", new AcceptableValueRange<float>(-2, 2))
+            new ConfigDescription("Negative values will shift your held weapon back, Positive values will shift it forward.", new AcceptableValueRange<float>(-5, 5))
         );
 
         MuzzleFlashLightIntensity = config.Bind(

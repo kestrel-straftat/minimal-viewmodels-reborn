@@ -1,3 +1,8 @@
+### v1.1.3
+
+- Increased range of allowed viewmodel offset values to [-5, 5]
+- Fixed modified dynamic fov not applying properly on player spawn
+
 ### v1.1.2
 
 - Rewrite of viewmodel repositioning code

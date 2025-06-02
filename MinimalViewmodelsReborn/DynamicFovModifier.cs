@@ -4,8 +4,7 @@ namespace MinimalViewmodelsReborn;
 
 public static class DynamicFovModifier
 {
-    public static void Apply() {
-        var controller = Settings.Instance.localPlayer;
+    public static void Apply(FirstPersonController controller) {
         if (!controller) return;
 
         controller.distToRunFov = Configs.RunFovIncrease.Value;
@@ -18,6 +17,6 @@ public static class DynamicFovModifier
     {
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
-        public static void ApplyOnStart() => Apply();
+        public static void ApplyOnStart(FirstPersonController __instance) => Apply(__instance);
     }
 }

@@ -3,7 +3,7 @@
     <AssemblyName>MinimalViewmodelsReborn</AssemblyName>
     <Description>A remake of the original Minimal Viewmodels, updated with many new features and fixes.</Description>
     <Product>kestrel.straftat.minimalviewmodels</Product>
-    <Version>1.1.2</Version>
+    <Version>1.1.3</Version>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>

@@ -31,7 +31,7 @@ public class Plugin : BaseUnityPlugin
     private static void OnSettingChanged(object sender, SettingChangedEventArgs e) {
         ViewmodelModifier.ApplyTransforms();
         MuzzleFlashModifier.ClearModifiedSet();
-        DynamicFovModifier.Apply();
+        DynamicFovModifier.Apply(Settings.Instance.localPlayer);
     }
 }
 
