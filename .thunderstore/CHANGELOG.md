@@ -1,3 +1,7 @@
+### v1.2.3
+
+- Added option to hide arms
+
 ### v1.1.3
 
 - Increased range of allowed viewmodel offset values to [-5, 5]
