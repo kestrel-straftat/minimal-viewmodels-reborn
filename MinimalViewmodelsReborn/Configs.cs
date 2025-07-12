@@ -10,6 +10,7 @@ public static class Configs
     public static ConfigEntry<float> ViewmodelOffsetZ { get; private set; }
     public static ConfigEntry<float> ViewmodelFOV { get; private set; }
     public static ConfigEntry<bool> InvisibleViewmodels { get; private set; }
+    public static ConfigEntry<bool> InvisibleArms { get; private set; }
     
     public static ConfigEntry<float> MuzzleFlashLightIntensity { get; private set; }
     public static ConfigEntry<float> MuzzleFlashScale { get; private set; }
@@ -26,6 +27,12 @@ public static class Configs
             "Invisible Viewmodels",
             false,
             "Hides your weapon completely."
+        );
+        InvisibleArms = config.Bind(
+            "Viewmodels.Visibility",
+            "Invisible Arms",
+            false,
+            "Hides your arms."
         );
         ViewmodelFOV = config.Bind(
             "Viewmodels.Visibility",
