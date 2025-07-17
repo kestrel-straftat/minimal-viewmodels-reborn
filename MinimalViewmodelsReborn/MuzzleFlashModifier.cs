@@ -7,7 +7,6 @@ namespace MinimalViewmodelsReborn;
 
 public static class MuzzleFlashModifier
 {
-    private static readonly string[] m_blackList = ["phoenix", "taser"];
     private static HashSet<GameObject> m_modifiedMuzzleFlashes = [];
 
     public static void ClearModifiedSet() => m_modifiedMuzzleFlashes.Clear();
@@ -19,7 +18,6 @@ public static class MuzzleFlashModifier
         [HarmonyPrefix]
         public static void ModifyBrightness(Weapon __instance, ref float ___lightIntensity, GameObject ___muzzleFlash) {
             string weaponName = __instance.GetComponent<ItemBehaviour>().weaponName;
-            if (m_blackList.Any(s => s == weaponName)) return;
             ___lightIntensity *= Configs.MuzzleFlashLightIntensity.Value;
         
             if (!___muzzleFlash || m_modifiedMuzzleFlashes.Contains(___muzzleFlash)) return;
