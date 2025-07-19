@@ -16,6 +16,7 @@
 
   <PropertyGroup>
     <GameLibs>$(GameDir)\STRAFTAT_Data\Managed</GameLibs>
+    <BepInExDir>$(appdata)\com.kesomannen.gale\straftat\profiles\Default\BepInEx</BepInExDir>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +47,6 @@
   </ItemGroup>
 
   <Target Name="CopyDllToGame" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="$(appdata)\com.kesomannen.gale\straftat\profiles\Default\BepInEx\plugins\kestrel-Minimal_Viewmodels_Reborn-dev" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="$(BepInExDir)\plugins\kestrel-Minimal_Viewmodels_Reborn-dev" />
   </Target>
 </Project>
