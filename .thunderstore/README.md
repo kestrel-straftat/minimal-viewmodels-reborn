@@ -33,4 +33,5 @@ _**(you should probably just use a mod manager like [r2modman](https://thunderst
 
 have fun :3
 
-<img src ="https://files.catbox.moe/4ngjto.png" width="250" alt="kity">
+<img src ="https://files.catbox.moe/fu6dqo.png" width="250" alt="kity">
+
