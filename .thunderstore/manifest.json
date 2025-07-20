@@ -1,6 +1,6 @@
 {
   "name": "Minimal_Viewmodels_Reborn",
-  "version_number": "1.2.3",
+  "version_number": "1.2.4",
   "website_url": "https://github.com/kestrel-straftat/minimal-viewmodels-reborn",
   "description": "A remake of the original Minimal Viewmodels, updated with many new features and fixes.",
   "dependencies": ["BepInEx-BepInExPack-5.4.2100"]

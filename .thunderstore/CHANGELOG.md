@@ -1,3 +1,7 @@
+### v1.2.4
+
+- Removed minimal muzzle flash vfx blacklist
+
 ### v1.2.3
 
 - Added option to hide arms
