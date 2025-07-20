@@ -1,6 +1,7 @@
 # Minimal Viewmodels Reborn
 
-This is a remake of the original Minimal Viewmodels mod, updated with many new features and bugfixes.
+This is a remake of the original Minimal Viewmodels mod, updated with many new features and bugfixes. 
+(thanks to [malco](https://thunderstore.io/c/straftat/p/malco/) for creating the original!)
 
 ## Features
 
