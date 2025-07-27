@@ -17,7 +17,7 @@ Extra features in this version:
 - The ability to customise the intensity and size of muzzle flashes (Ever tried using the qcw or ak in a dark area?)
 - The ability to hide your arms
 - The ability to customise the fov increase when sprinting and sliding
-- The mod's options now update properly at runtime when modified, meaning you can use mods such as[BepInEx Configuration Manager](https://github.com/BepInEx/BepInEx.ConfigurationManager)
+- The mod's options now update properly at runtime when modified, meaning you can use mods such as [Mod Menu](https://thunderstore.io/c/straftat/p/kestrel/Mod_Menu/)
 to adjust options and see them update ingame immediately (which I highly recommend trying!)
 
 ## Usage
