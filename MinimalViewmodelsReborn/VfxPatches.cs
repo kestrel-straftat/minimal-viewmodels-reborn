@@ -39,12 +39,14 @@ public static class VfxPatches
         }
 
         [HarmonyPrefix]
-        private static void FixHitPoint(Weapon __instance, ref Vector3 hitPoint, Camera ___cam, LineRenderer ___bulletTrailLocal) {
-            if (!__instance.IsOwner) return;
+        private static bool FixHitPoint(Weapon __instance, ref Vector3 hitPoint, Camera ___cam, LineRenderer ___bulletTrailLocal) {
+            if (!__instance.IsOwner) return true;
+            if (Configs.HideBulletTrails.Value) return false;
             // recalculate hit point (we know the original ray originated from ___cam.transform.position and ended at hitpoint)
             hitPoint = ViewmodelModifier.WeaponCam.transform.position + (hitPoint - ___cam.transform.position);
             
             if (___bulletTrailLocal) SetObjToLayer(___bulletTrailLocal.gameObject, m_heldLayer);
+            return true;
         }
 
         [HarmonyPostfix]

@@ -11,9 +11,10 @@ public static class Configs
     public static ConfigEntry<float> ViewmodelFOV { get; private set; }
     public static ConfigEntry<bool> InvisibleViewmodels { get; private set; }
     public static ConfigEntry<bool> InvisibleArms { get; private set; }
-    
+
     public static ConfigEntry<float> MuzzleFlashLightIntensity { get; private set; }
     public static ConfigEntry<float> MuzzleFlashScale { get; private set; }
+    public static ConfigEntry<bool> HideBulletTrails { get; private set; }
     
     public static ConfigEntry<float> RunFovIncrease { get; private set; }
     public static ConfigEntry<float> SlideFovIncrease { get; private set; }
@@ -59,18 +60,25 @@ public static class Configs
             new ConfigDescription("Negative values will shift your held weapon back, Positive values will shift it forward.", new AcceptableValueRange<float>(-5, 5))
         );
 
+        HideBulletTrails = config.Bind(
+            "VFX.General",
+            "Hide Bullet Trails",
+            false,
+            "Hides bullet trails."
+        );
         MuzzleFlashLightIntensity = config.Bind(
-            "MuzzleFlashes.General",
+            "VFX.MuzzleFlashes",
             "Muzzle Flash Light Intensity",
             1f,
             "A multiplier applied to the light intensity of muzzle flashes. Requires a map restart to apply."
         );
         MuzzleFlashScale = config.Bind(
-            "MuzzleFlashes.General",
+            "VFX.MuzzleFlashes",
             "Muzzle Flash Scale",
             1f,
             "A multiplier applied to the scale of muzzle flashes. Requires a map restart to apply."
         );
+        
 
         RunFovIncrease = config.Bind(
             "DynamicFov.General",

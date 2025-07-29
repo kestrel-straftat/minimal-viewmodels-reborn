@@ -1,3 +1,9 @@
+### v1.2.5
+
+- Added option to hide bullet tracers
+- The `MuzzleFlashes.General` config section has been removed in favour of a `VFX.MuzzleFlashes` section - your muzzle
+flash configs may have been reset (sorry!)
+
 ### v1.2.4
 
 - Removed minimal muzzle flash vfx blacklist
