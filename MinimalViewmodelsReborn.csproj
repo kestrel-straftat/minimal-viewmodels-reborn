@@ -47,9 +47,6 @@
   
   <ItemGroup>
     <None Include=".thunderstore\**" />
-  </ItemGroup>
-  
-  <ItemGroup>
     <Content Include="MinimalViewmodelsReborn.csproj.user" />
   </ItemGroup>
 
