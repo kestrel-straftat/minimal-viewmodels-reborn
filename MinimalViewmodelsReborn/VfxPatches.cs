@@ -17,45 +17,33 @@ public static class VfxPatches
     private static LayerMask m_heldLayer = LayerMask.NameToLayer("HeldWeapon");
     private static LayerMask m_defaultLayer = LayerMask.NameToLayer("Default");
     
-    // sets a gameobject and all its children to a specified layer (as layers are not inherited)
-    private static void SetObjToLayer(GameObject obj, LayerMask layer) {
-        obj.layer = layer;
-        foreach (Transform child in obj.transform) {
-            child.gameObject.layer = layer;
-        }
-    }
-    
     // fix the bullet trail to visually finish at the right point as we transform it with the weapon cam
     // & fix layer of prefab of bullet trail for the duration of the call
     [HarmonyPatch]
     public static class SpawnBulletTrailPatch
     {
         [HarmonyTargetMethods]
-        private static IEnumerable<MethodBase> TargetMethods() {
-            foreach (var type in m_weaponTypes) {
-                if (type.GetMethod("SpawnBulletTrail", BindingFlags.Instance | BindingFlags.NonPublic) is { } method)
-                    yield return method;
-            }
-        }
-
+        private static IEnumerable<MethodBase> TargetMethods() =>
+            m_weaponTypes
+                .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
+                .Where(m => m.Name.StartsWith("RpcLogic___SpawnBulletTrail"));
+        
         [HarmonyPrefix]
         private static bool FixHitPoint(Weapon __instance, ref Vector3 hitPoint, Camera ___cam, LineRenderer ___bulletTrailLocal) {
-            if (!__instance.IsOwner) return true;
+            if (!___bulletTrailLocal || !__instance.IsOwner) return true;
             if (Configs.HideBulletTrails.Value) return false;
             // recalculate hit point (we know the original ray originated from ___cam.transform.position and ended at hitpoint)
             hitPoint = ViewmodelModifier.WeaponCam.transform.position + (hitPoint - ___cam.transform.position);
-            
-            if (___bulletTrailLocal) SetObjToLayer(___bulletTrailLocal.gameObject, m_heldLayer);
+            ___bulletTrailLocal.gameObject.SetLayer(m_heldLayer);
             return true;
         }
 
         [HarmonyPostfix]
         private static void ResetVfxLayers(Weapon __instance, LineRenderer ___bulletTrailLocal) {
-            if (!__instance.IsOwner || !___bulletTrailLocal) return;
-            SetObjToLayer(___bulletTrailLocal.gameObject, m_defaultLayer);
+            if (!___bulletTrailLocal || !__instance.IsOwner) return;
+            ___bulletTrailLocal.gameObject.SetLayer(m_defaultLayer);
         }
     }
-    
     
     // fix layers of prefabs of eject case vfx
     [HarmonyPatch(typeof(Weapon), "OnShoot")]
@@ -63,14 +51,14 @@ public static class VfxPatches
     {
         [HarmonyPrefix]
         public static void SetVfxLayers(Weapon __instance, GameObject ___ejectCaseVfx) {
-            if (!__instance.IsOwner || !___ejectCaseVfx) return;
-            SetObjToLayer(___ejectCaseVfx, m_heldLayer);
+            if (!___ejectCaseVfx || !__instance.IsOwner) return;
+            ___ejectCaseVfx.SetLayer(m_heldLayer);
         }
 
         [HarmonyPostfix]
         public static void ResetVfxLayers(Weapon __instance, GameObject ___ejectCaseVfx) {
-            if (!__instance.IsOwner || !___ejectCaseVfx) return;
-            SetObjToLayer(___ejectCaseVfx, m_defaultLayer);
+            if (!___ejectCaseVfx || !__instance.IsOwner) return;
+            ___ejectCaseVfx.SetLayer(m_defaultLayer);
         }
     }
     
@@ -79,23 +67,22 @@ public static class VfxPatches
     public static class MuzzleFlashFix
     {
         [HarmonyTargetMethods]
-        private static IEnumerable<MethodBase> TargetMethods() {
-            foreach (var type in m_weaponTypes) {
-                if (type.GetMethod("ShootObserversEffect", BindingFlags.Instance | BindingFlags.NonPublic) is { } method)
-                    yield return method;
-            }
-        }
+        private static IEnumerable<MethodBase> TargetMethods() =>
+            m_weaponTypes
+                .Except([typeof(BeamGun)]) // beam gun does its own thing (?????). see below
+                .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
+                .Where(m => m.Name.StartsWith("RpcLogic___ShootObserversEffect"));
 
         [HarmonyPrefix]
         private static void SetVfxLayers(Weapon __instance, GameObject ___muzzleFlash) {
-            if (!__instance.IsOwner || !___muzzleFlash) return;
-            SetObjToLayer(___muzzleFlash, m_heldLayer);
+            if (!___muzzleFlash || !__instance.IsOwner) return;
+            ___muzzleFlash.SetLayer(m_heldLayer);
         }
 
         [HarmonyPostfix]
         private static void ResetVfxLayers(Weapon __instance, GameObject ___muzzleFlash) {
-            if (!__instance.IsOwner || !___muzzleFlash) return;
-            SetObjToLayer(___muzzleFlash, m_defaultLayer);
+            if (!___muzzleFlash || !__instance.IsOwner) return;
+            ___muzzleFlash.SetLayer(m_defaultLayer);
         }
     }
 
@@ -108,47 +95,59 @@ public static class VfxPatches
         [HarmonyPrefix]
         public static void SetVfxLayers(DualLauncher __instance, bool ___grenadeOpen, ParticleSystem ___grenadeSmoke) {
             if (!___grenadeOpen || !__instance.IsOwner) return;
-            SetObjToLayer(___grenadeSmoke.gameObject, m_heldLayer);
+            ___grenadeSmoke.gameObject.SetLayer(m_heldLayer);
         }
         
         [HarmonyPostfix]
         public static void ResetVfxLayers(DualLauncher __instance, bool ___grenadeOpen, ParticleSystem ___grenadeSmoke) {
             if (!___grenadeOpen || !__instance.IsOwner) return;
-            SetObjToLayer(___grenadeSmoke.gameObject, m_defaultLayer);
+            ___grenadeSmoke.gameObject.SetLayer(m_defaultLayer);
         }
     }
 
+    // what the hell is muzzle flash 2
+    
     [HarmonyPatch(typeof(BeamGun))]
-    public static class WhatTheHellIsMuzzleFlash2
+    public static class BeamGunMuzzleFlash2Patch
     {
-        [HarmonyPatch("ShootObserversEffect")]
+        [HarmonyTargetMethod]
+        private static MethodBase TargetMethod() =>
+            typeof(BeamGun)
+                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                .First(m => m.Name.StartsWith("RpcLogic___ShootObserversEffect_"));
+        
         [HarmonyPrefix]
         public static void SetVfxLayers(BeamGun __instance, GameObject ___muzzleFlash2) {
             if (!__instance.IsOwner || !___muzzleFlash2) return;
-            SetObjToLayer(___muzzleFlash2, m_heldLayer);
+            ___muzzleFlash2.SetLayer(m_heldLayer);
         }
         
-        [HarmonyPatch("ShootObserversEffect")]
         [HarmonyPostfix]
         public static void ResetVfxLayers(BeamGun __instance, GameObject ___muzzleFlash2) {
             if (!__instance.IsOwner || !___muzzleFlash2) return;
-            SetObjToLayer(___muzzleFlash2, m_defaultLayer);
+            ___muzzleFlash2.SetLayer(m_defaultLayer);
         }
+    }
+    
+    [HarmonyPatch(typeof(BeamGun))]
+    public static class BeamGunMuzzleFlashPatch
+    {
+        [HarmonyTargetMethod]
+        private static MethodBase TargetMethod() =>
+            typeof(BeamGun)
+                .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+                .First(m => m.Name.StartsWith("RpcLogic___ShootObserversEffect2_"));
         
-        // ... why are the vfx for the beam load set up like this
-        
-        [HarmonyPatch("ShootObserversEffect2")]
         [HarmonyPrefix]
-        public static void SetVfxLayers2(BeamGun __instance, GameObject ___muzzleFlash) {
+        public static void SetVfxLayers(BeamGun __instance, GameObject ___muzzleFlash) {
             if (!__instance.IsOwner || !___muzzleFlash) return;
-            SetObjToLayer(___muzzleFlash, m_heldLayer);
+            ___muzzleFlash.SetLayer(m_heldLayer);
         }
         
-        [HarmonyPatch("ShootObserversEffect2")]
         [HarmonyPostfix]
-        public static void ResetVfxLayers2(BeamGun __instance, GameObject ___muzzleFlash) {
+        public static void ResetVfxLayers(BeamGun __instance, GameObject ___muzzleFlash) {
             if (!__instance.IsOwner || !___muzzleFlash) return;
-            SetObjToLayer(___muzzleFlash, m_defaultLayer);
+            ___muzzleFlash.SetLayer(m_defaultLayer);
         }
     }
     

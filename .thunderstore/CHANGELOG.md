@@ -1,3 +1,7 @@
+### v1.2.6
+
+- Fixed the `Hide Bullet Trails` option hiding bullet trails for everyone if the host enabled it. oops :3
+
 ### v1.2.5
 
 - Added option to hide bullet tracers
