@@ -22,19 +22,21 @@ public static class VfxPatches
     [HarmonyPatch]
     public static class SpawnBulletTrailPatch
     {
+        // note to future self. remember the underscore when patching rpclogic shit like this silly
         [HarmonyTargetMethods]
         private static IEnumerable<MethodBase> TargetMethods() =>
             m_weaponTypes
                 .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
-                .Where(m => m.Name.StartsWith("RpcLogic___SpawnBulletTrail"));
+                .Where(m => m.Name.StartsWith("RpcLogic___SpawnBulletTrail_"));
         
         [HarmonyPrefix]
         private static bool FixHitPoint(Weapon __instance, ref Vector3 hitPoint, Camera ___cam, LineRenderer ___bulletTrailLocal) {
-            if (!___bulletTrailLocal || !__instance.IsOwner) return true;
+            if (!__instance.IsOwner) return true;
             if (Configs.HideBulletTrails.Value) return false;
             // recalculate hit point (we know the original ray originated from ___cam.transform.position and ended at hitpoint)
             hitPoint = ViewmodelModifier.WeaponCam.transform.position + (hitPoint - ___cam.transform.position);
-            ___bulletTrailLocal.gameObject.SetLayer(m_heldLayer);
+            if (___bulletTrailLocal) ___bulletTrailLocal.gameObject.SetLayer(m_heldLayer);
+
             return true;
         }
 
@@ -71,7 +73,7 @@ public static class VfxPatches
             m_weaponTypes
                 .Except([typeof(BeamGun)]) // beam gun does its own thing (?????). see below
                 .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
-                .Where(m => m.Name.StartsWith("RpcLogic___ShootObserversEffect"));
+                .Where(m => m.Name.StartsWith("RpcLogic___ShootObserversEffect_"));
 
         [HarmonyPrefix]
         private static void SetVfxLayers(Weapon __instance, GameObject ___muzzleFlash) {

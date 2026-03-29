@@ -1,3 +1,7 @@
+### v1.2.7
+
+- Fixed bullet trails ending at the wrong point
+
 ### v1.2.6
 
 - Fixed the `Hide Bullet Trails` option hiding bullet trails for everyone if the host enabled it. oops :3
