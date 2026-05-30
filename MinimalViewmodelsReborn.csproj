@@ -11,6 +11,12 @@
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
   </PropertyGroup>
 
+  <!--
+  if you would like to build this project and one or both of your BepInEx and/or game are
+  not installed in the usual place, set <GameDir>/<BepInExDir> here. Remember trailing slashes!
+  -->
+  <Import Project="Directory.Build.local.props" Condition="Exists('Directory.Build.local.props')" />
+
   <PropertyGroup Condition="'$(GameDir)' == ''">
     <GameDir>C:\Program Files (x86)\Steam\steamapps\common\STRAFTAT\</GameDir>
   </PropertyGroup>
