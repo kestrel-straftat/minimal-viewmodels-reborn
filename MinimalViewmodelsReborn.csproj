@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>MinimalViewmodelsReborn</AssemblyName>
-    <Description>A remake of the original Minimal Viewmodels, updated with many new features and fixes.</Description>
-    <Product>kestrel.straftat.minimalviewmodels</Product>
+    <Product>MinimalViewmodelsReborn</Product>
     <Version>1.2.7</Version>
+    <Description>A remake of the original Minimal Viewmodels, updated with many new features and fixes.</Description>
+    <BepInExPluginGuid>kestrel.straftat.minimalviewmodels</BepInExPluginGuid>
+    <AssemblyName>$(Product)</AssemblyName>
     <TargetFramework>netstandard2.1</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
@@ -11,46 +12,58 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(GameDir)' == ''">
-    <GameDir>C:\Program Files (x86)\Steam\steamapps\common\STRAFTAT</GameDir>
+    <GameDir>C:\Program Files (x86)\Steam\steamapps\common\STRAFTAT\</GameDir>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(BepInExDir)' == ''">
-    <BepInExDir>$(GameDir)\BepInEx</BepInExDir>
+    <BepInExDir>$(GameDir)BepInEx\</BepInExDir>
   </PropertyGroup>
 
   <PropertyGroup>
-    <GameLibDir>$(GameDir)\STRAFTAT_Data\Managed</GameLibDir>
+    <GameLibDir>$(GameDir)STRAFTAT_Data\Managed\</GameLibDir>
+    <DevBuildDir>$(BepInExDir)plugins\kestrel-Minimal_Viewmodels_Reborn-dev\</DevBuildDir>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
-    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
-    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" />
-    <PackageReference Include="UnityEngine.Modules" Version="2021.3.16" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.1.0" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" />
+    <PackageReference Include="UnityEngine.Modules" Version="2021.3.45" IncludeAssets="compile" />
   </ItemGroup>
   
   <ItemGroup>
     <Reference Include="Assembly-CSharp" Publicize="true">
-      <HintPath>$(GameLibDir)\Assembly-CSharp.dll</HintPath>
+      <HintPath>$(GameLibDir)Assembly-CSharp.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="DOTween">
+      <HintPath>$(GameLibDir)DOTween.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="ComputerysModdingUtilities">
-      <HintPath>$(GameLibDir)\ComputerysModdingUtilities.dll</HintPath>
+      <HintPath>$(GameLibDir)ComputerysModdingUtilities.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="FishNet.Runtime">
-      <HintPath>$(GameLibDir)\FishNet.Runtime.dll</HintPath>
+      <HintPath>$(GameLibDir)FishNet.Runtime.dll</HintPath>
+      <Private>true</Private>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>$(GameLibDir)\Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>$(GameLibDir)Unity.Postprocessing.Runtime.dll</HintPath>
+      <Private>true</Private>
     </Reference>
   </ItemGroup>
   
   <ItemGroup>
     <None Include=".thunderstore\**" />
-    <Content Include="MinimalViewmodelsReborn.csproj.user" />
   </ItemGroup>
 
   <Target Name="CopyDllToGame" AfterTargets="PostBuildEvent">
-    <Copy SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFolder="$(BepInExDir)\plugins\kestrel-Minimal_Viewmodels_Reborn-dev" />
+    <ItemGroup>
+      <OldFiles Include="$(DevBuildDir)$(Product)-v*.dll" />
+    </ItemGroup>
+    <Delete Files="@(OldFiles)" />
+    <Move SourceFiles="$(TargetDir)$(TargetName).dll" DestinationFiles="$(DevBuildDir)$(Product)-v$(Version).dll"/>
   </Target>
 </Project>
