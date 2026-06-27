@@ -9,6 +9,7 @@ public static class Configs
     public static ConfigEntry<float> ViewmodelOffsetY { get; private set; }
     public static ConfigEntry<float> ViewmodelOffsetZ { get; private set; }
     public static ConfigEntry<float> ViewmodelFOV { get; private set; }
+    public static ConfigEntry<bool> MirrorViewmodel { get; private set; }
     public static ConfigEntry<bool> InvisibleViewmodels { get; private set; }
     public static ConfigEntry<bool> InvisibleArms { get; private set; }
 
@@ -34,6 +35,12 @@ public static class Configs
             "Invisible Arms",
             false,
             "Hides your arms."
+        );
+        MirrorViewmodel = config.Bind(
+            "Viewmodels.Visibility",
+            "Mirror Viewmodel",
+            false,
+            "Mirrors your viewmodel."
         );
         ViewmodelFOV = config.Bind(
             "Viewmodels.Visibility",

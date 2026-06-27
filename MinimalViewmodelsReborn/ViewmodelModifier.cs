@@ -8,6 +8,7 @@ namespace MinimalViewmodelsReborn;
 public static class ViewmodelModifier
 {
     public static Camera WeaponCam { get; private set; }
+    private static Matrix4x4 OriginalProjectionMatrix;
     public static SkinnedMeshRenderer[] armRenderers;
     
     // apply transformations to the viewmodel camera
@@ -25,6 +26,27 @@ public static class ViewmodelModifier
         WeaponCam.fieldOfView = Configs.ViewmodelFOV.Value;
 
         WeaponCam.transform.localPosition = -Configs.ViewmodelOffset;
+
+        WeaponCam.projectionMatrix = OriginalProjectionMatrix;
+        Camera.onPreRender -= OnPreRender;
+        Camera.onPostRender -= OnPostRender;
+        if (Configs.MirrorViewmodel.Value)
+        {
+            WeaponCam.projectionMatrix *= Matrix4x4.Scale(new Vector3(-1, 1, 1));
+            Camera.onPreRender += OnPreRender;
+            Camera.onPostRender += OnPostRender;
+        }
+    }
+    
+    private static void OnPreRender(Camera cam) {
+        if (cam == WeaponCam) {
+            GL.invertCulling = true;
+        }
+    }
+    private static void OnPostRender(Camera cam) {
+        if (cam == WeaponCam) {
+            GL.invertCulling = false;
+        }
     }
     
     // ok. that was the easy bit. now it's time to fix everything that broke!
@@ -40,6 +62,7 @@ public static class ViewmodelModifier
             if (!__instance.IsOwner) return;
             ___cameras[0].cullingMask = ___highMask;
             WeaponCam = ___cameras[1];
+            OriginalProjectionMatrix = WeaponCam.projectionMatrix;
             armRenderers = ___fpArms.Select(obj => obj.GetComponent<SkinnedMeshRenderer>()).ToArray();
             
             // force the weapon camera to be enabled
