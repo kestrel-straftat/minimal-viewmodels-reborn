@@ -1,3 +1,9 @@
+### v1.3.7
+
+- Added option to mirror the viewmodel (courtesy of [1rubyrain](https://github.com/1rubyrain) in [#1](https://github.com/kestrel-straftat/minimal-viewmodels-reborn/pull/1))
+- Temporarily disabled the `Muzzle Flash Light Intensity` option - muzzle flash lights have been broken for several months and nobody noticed. lol
+    - `Muzzle Flash Scale` is still enabled and works as intended
+
 ### v1.2.7
 
 - Fixed bullet trails ending at the wrong point
