@@ -1,30 +1,32 @@
 using System.Collections.Generic;
-using System.Linq;
 using HarmonyLib;
 using UnityEngine;
 
-namespace MinimalViewmodelsReborn;
+namespace MinimalViewmodelsReborn.Patches;
 
 public static class MuzzleFlashModifier
 {
     private static HashSet<GameObject> m_modifiedMuzzleFlashes = [];
 
-    public static void ClearModifiedSet() => m_modifiedMuzzleFlashes.Clear();
-    
+    public static void Apply() {
+        // this doesn't exactly fit the "Modifier" thing i'm going for here
+        // as it does things a little more dynamically but whatever
+        m_modifiedMuzzleFlashes.Clear();
+    }
+
     [HarmonyPatch(typeof(Weapon))]
     public static class WeaponPatch
     {
         [HarmonyPatch("Awake")]
         [HarmonyPrefix]
         public static void ModifyBrightness(Weapon __instance, ref float ___lightIntensity, GameObject ___muzzleFlash) {
-            string weaponName = __instance.GetComponent<ItemBehaviour>().weaponName;
-            ___lightIntensity *= Configs.MuzzleFlashLightIntensity.Value;
+            ___lightIntensity *= Plugin.MuzzleFlashLightIntensity.Value;
         
             if (!___muzzleFlash || m_modifiedMuzzleFlashes.Contains(___muzzleFlash)) return;
             foreach (var system in ___muzzleFlash.GetComponentsInChildren<ParticleSystem>(true)) {
                 var main = system.main;
                 main.scalingMode = ParticleSystemScalingMode.Local;
-                system.gameObject.transform.localScale = Vector3.one * Configs.MuzzleFlashScale.Value;
+                system.gameObject.transform.localScale = Vector3.one * Plugin.MuzzleFlashScale.Value;
             }
             m_modifiedMuzzleFlashes.Add(___muzzleFlash);
         }

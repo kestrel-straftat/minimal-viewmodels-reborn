@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MinimalViewmodelsReborn;
+namespace MinimalViewmodelsReborn.Utils;
 
 internal static class GameObjectExtensions
 {

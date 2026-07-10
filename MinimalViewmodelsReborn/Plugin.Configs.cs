@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace MinimalViewmodelsReborn;
 
-public static class Configs
+public partial class Plugin
 {
     public static ConfigEntry<float> ViewmodelOffsetX { get; private set; }
     public static ConfigEntry<float> ViewmodelOffsetY { get; private set; }
@@ -20,66 +20,66 @@ public static class Configs
     public static ConfigEntry<float> RunFovIncrease { get; private set; }
     public static ConfigEntry<float> SlideFovIncrease { get; private set; }
     public static ConfigEntry<float> RunSlideFovIncrease { get; private set; }
-
+    
     public static Vector3 ViewmodelOffset => new(ViewmodelOffsetX.Value, ViewmodelOffsetY.Value, ViewmodelOffsetZ.Value);
 
-    internal static void Init(ConfigFile config) {
-        InvisibleViewmodels = config.Bind(
+    internal void InitConfigs() {
+        InvisibleViewmodels = Config.Bind(
             "Viewmodels.Visibility",
             "Invisible Viewmodels",
             false,
             "Hides your weapon completely."
         );
-        InvisibleArms = config.Bind(
+        InvisibleArms = Config.Bind(
             "Viewmodels.Visibility",
             "Invisible Arms",
             false,
             "Hides your arms."
         );
-        MirrorViewmodel = config.Bind(
-            "Viewmodels.Visibility",
-            "Mirror Viewmodel",
-            false,
-            "Mirrors your viewmodel."
-        );
-        ViewmodelFOV = config.Bind(
+        ViewmodelFOV = Config.Bind(
             "Viewmodels.Visibility",
             "Viewmodel FOV",
             75f,
             "Set the FOV of the viewmodel camera."
         );
-        ViewmodelOffsetX = config.Bind(
+        MirrorViewmodel = Config.Bind(
+            "Viewmodels.Visibility",
+            "Mirror Viewmodel",
+            false,
+            "Mirrors your viewmodel."
+        );
+        ViewmodelOffsetX = Config.Bind(
             "Viewmodels.Offset",
             "Viewmodel X Offset",
             0f,
             new ConfigDescription("Negative values will shift your held weapon left, Positive values will shift it right.", new AcceptableValueRange<float>(-5, 5))
         );
-        ViewmodelOffsetY = config.Bind(
+        ViewmodelOffsetY = Config.Bind(
             "Viewmodels.Offset",
             "Viewmodel Y Offset",
             -0.1f,
             new ConfigDescription("Negative values will shift your held weapon down, Positive values will shift it up.", new AcceptableValueRange<float>(-5, 5))
         );
-        ViewmodelOffsetZ = config.Bind(
+        ViewmodelOffsetZ = Config.Bind(
             "Viewmodels.Offset",
             "Viewmodel Z Offset",
             0f,
             new ConfigDescription("Negative values will shift your held weapon back, Positive values will shift it forward.", new AcceptableValueRange<float>(-5, 5))
         );
 
-        HideBulletTrails = config.Bind(
+        HideBulletTrails = Config.Bind(
             "VFX.General",
             "Hide Bullet Trails",
             false,
             "Hides bullet trails."
         );
-        MuzzleFlashLightIntensity = config.Bind(
+        MuzzleFlashLightIntensity = Config.Bind(
             "VFX.MuzzleFlashes",
             "Muzzle Flash Light Intensity",
             1f,
             "A multiplier applied to the light intensity of muzzle flashes. Requires a map restart to apply."
         );
-        MuzzleFlashScale = config.Bind(
+        MuzzleFlashScale = Config.Bind(
             "VFX.MuzzleFlashes",
             "Muzzle Flash Scale",
             1f,
@@ -87,19 +87,19 @@ public static class Configs
         );
         
 
-        RunFovIncrease = config.Bind(
+        RunFovIncrease = Config.Bind(
             "DynamicFov.General",
             "Run Fov Increase",
             15f,
             "When sprinting, your FOV will be increased by this amount."
         );
-        SlideFovIncrease = config.Bind(
+        SlideFovIncrease = Config.Bind(
             "DynamicFov.General",
             "Slide Fov Increase",
             12f,
             "When sliding, your FOV will be increased by this amount."
         );
-        RunSlideFovIncrease = config.Bind(
+        RunSlideFovIncrease = Config.Bind(
             "DynamicFov.General",
             "Run Slide Fov Increase",
             15f,

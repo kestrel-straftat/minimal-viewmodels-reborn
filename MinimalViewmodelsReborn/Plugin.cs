@@ -3,6 +3,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using ComputerysModdingUtilities;
 using HarmonyLib;
+using MinimalViewmodelsReborn.Patches;
 using UnityEngine;
 
 [assembly: StraftatMod(isVanillaCompatible: true)]
@@ -10,7 +11,7 @@ using UnityEngine;
 namespace MinimalViewmodelsReborn;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
-public class Plugin : BaseUnityPlugin
+public partial class Plugin : BaseUnityPlugin
 {
     public static Plugin Instance { get; private set; }
     internal static new ManualLogSource Logger;
@@ -21,7 +22,7 @@ public class Plugin : BaseUnityPlugin
         gameObject.hideFlags = HideFlags.HideAndDontSave;
         Instance = this;
         Logger = base.Logger;
-        Configs.Init(Config);
+        InitConfigs();
         Config.SettingChanged += OnSettingChanged;
         
         new Harmony(PluginInfo.PLUGIN_GUID).PatchAll();
@@ -29,9 +30,9 @@ public class Plugin : BaseUnityPlugin
     }
 
     private static void OnSettingChanged(object sender, SettingChangedEventArgs e) {
-        ViewmodelModifier.ApplyTransforms();
-        MuzzleFlashModifier.ClearModifiedSet();
-        DynamicFovModifier.Apply(Settings.Instance.localPlayer);
+        ViewmodelModifier.Apply();
+        MuzzleFlashModifier.Apply();
+        DynamicFovModifier.Apply();
     }
 }
 

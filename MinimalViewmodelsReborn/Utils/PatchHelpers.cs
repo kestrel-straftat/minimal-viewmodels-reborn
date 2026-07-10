@@ -1,0 +1,21 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+
+namespace MinimalViewmodelsReborn.Utils;
+
+internal static class PatchHelpers
+{
+    internal static MethodBase GetRpcLogicMethod(this Type type, string methodName) {
+        return type
+            .GetMethods(BindingFlags.Instance | BindingFlags.NonPublic)
+            .First(m => m.Name.StartsWith("RpcLogic___" + methodName + "_"));
+    }
+
+    internal static IEnumerable<MethodBase> GetRpcLogicMethods(this IEnumerable<Type> types, string methodName) {
+        return types
+            .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
+            .Where(m => m.Name.StartsWith("RpcLogic___" + methodName + "_"));
+    }
+}

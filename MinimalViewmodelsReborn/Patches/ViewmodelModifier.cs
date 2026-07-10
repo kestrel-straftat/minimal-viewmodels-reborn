@@ -3,34 +3,34 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
-namespace MinimalViewmodelsReborn;
+namespace MinimalViewmodelsReborn.Patches;
 
 public static class ViewmodelModifier
 {
     public static Camera WeaponCam { get; private set; }
-    private static Matrix4x4 OriginalProjectionMatrix;
-    public static SkinnedMeshRenderer[] armRenderers;
     
-    // apply transformations to the viewmodel camera
-    public static void ApplyTransforms() {
+    private static Matrix4x4 m_originalProjectionMatrix;
+    private static SkinnedMeshRenderer[] m_armRenderers;
+    
+    public static void Apply() {
         if (!WeaponCam) return;
 
-        bool hideArms = Configs.InvisibleArms.Value;
-        foreach (var obj in armRenderers) {
+        bool hideArms = Plugin.InvisibleArms.Value;
+        foreach (var obj in m_armRenderers) {
             obj.enabled = !hideArms;
         }
         
-        WeaponCam.enabled = !Configs.InvisibleViewmodels.Value;
-        if (Configs.InvisibleViewmodels.Value) return;
+        WeaponCam.enabled = !Plugin.InvisibleViewmodels.Value;
+        if (Plugin.InvisibleViewmodels.Value) return;
         
-        WeaponCam.fieldOfView = Configs.ViewmodelFOV.Value;
+        WeaponCam.fieldOfView = Plugin.ViewmodelFOV.Value;
 
-        WeaponCam.transform.localPosition = -Configs.ViewmodelOffset;
+        WeaponCam.transform.localPosition = -Plugin.ViewmodelOffset;
 
-        WeaponCam.projectionMatrix = OriginalProjectionMatrix;
+        WeaponCam.projectionMatrix = m_originalProjectionMatrix;
         Camera.onPreRender -= OnPreRender;
         Camera.onPostRender -= OnPostRender;
-        if (Configs.MirrorViewmodel.Value)
+        if (Plugin.MirrorViewmodel.Value)
         {
             WeaponCam.projectionMatrix *= Matrix4x4.Scale(new Vector3(-1, 1, 1));
             Camera.onPreRender += OnPreRender;
@@ -62,8 +62,8 @@ public static class ViewmodelModifier
             if (!__instance.IsOwner) return;
             ___cameras[0].cullingMask = ___highMask;
             WeaponCam = ___cameras[1];
-            OriginalProjectionMatrix = WeaponCam.projectionMatrix;
-            armRenderers = ___fpArms.Select(obj => obj.GetComponent<SkinnedMeshRenderer>()).ToArray();
+            m_originalProjectionMatrix = WeaponCam.projectionMatrix;
+            m_armRenderers = ___fpArms.Select(obj => obj.GetComponent<SkinnedMeshRenderer>()).ToArray();
             
             // force the weapon camera to be enabled
             WeaponCam.enabled = true;
@@ -77,7 +77,7 @@ public static class ViewmodelModifier
                 WeaponCam.GetComponent<PostProcessLayer>().enabled = false;
             }
             
-            ApplyTransforms();
+            Apply();
         }
     }
 }
