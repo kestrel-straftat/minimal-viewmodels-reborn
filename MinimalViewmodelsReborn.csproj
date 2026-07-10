@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Product>MinimalViewmodelsReborn</Product>
-    <Version>1.3.7</Version>
+    <Version>1.3.8</Version>
     <Description>A remake of the original Minimal Viewmodels, updated with many new features and fixes.</Description>
     <BepInExPluginGuid>kestrel.straftat.minimalviewmodels</BepInExPluginGuid>
     <AssemblyName>$(Product)</AssemblyName>

@@ -1,3 +1,7 @@
+### v1.3.8
+
+- Fixed viewmodel FOV not working
+
 ### v1.3.7
 
 - Added option to mirror the viewmodel (courtesy of [1rubyrain](https://github.com/1rubyrain) in [#1](https://github.com/kestrel-straftat/minimal-viewmodels-reborn/pull/1))

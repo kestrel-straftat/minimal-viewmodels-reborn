@@ -9,11 +9,12 @@ public static class ViewmodelModifier
 {
     public static Camera WeaponCam { get; private set; }
     
-    private static Matrix4x4 m_originalProjectionMatrix;
     private static SkinnedMeshRenderer[] m_armRenderers;
     
     public static void Apply() {
-        if (!WeaponCam) return;
+        if (!WeaponCam) {
+            return;
+        }
 
         bool hideArms = Plugin.InvisibleArms.Value;
         foreach (var obj in m_armRenderers) {
@@ -21,18 +22,17 @@ public static class ViewmodelModifier
         }
         
         WeaponCam.enabled = !Plugin.InvisibleViewmodels.Value;
-        if (Plugin.InvisibleViewmodels.Value) return;
+        if (Plugin.InvisibleViewmodels.Value) {
+            return;
+        }
         
-        WeaponCam.fieldOfView = Plugin.ViewmodelFOV.Value;
-
         WeaponCam.transform.localPosition = -Plugin.ViewmodelOffset;
-
-        WeaponCam.projectionMatrix = m_originalProjectionMatrix;
+        
+        WeaponCam.projectionMatrix = ConstructCameraProjectionMatrix();
+        
         Camera.onPreRender -= OnPreRender;
         Camera.onPostRender -= OnPostRender;
-        if (Plugin.MirrorViewmodel.Value)
-        {
-            WeaponCam.projectionMatrix *= Matrix4x4.Scale(new Vector3(-1, 1, 1));
+        if (Plugin.MirrorViewmodel.Value) {
             Camera.onPreRender += OnPreRender;
             Camera.onPostRender += OnPostRender;
         }
@@ -49,6 +49,19 @@ public static class ViewmodelModifier
         }
     }
     
+    // technically this should also be called whenever the screen aspect changes
+    // but unity doesn't let you do that easily. sooooo
+    private static Matrix4x4 ConstructCameraProjectionMatrix() {
+        float aspect = (float)Screen.width / Screen.height;
+        
+        // far plane is 100.0 to prevent bullet trails from being cut off when being rendered by the weapon cam
+        var mat = Matrix4x4.Perspective(Plugin.ViewmodelFOV.Value, aspect, 0.1f, 100.0f);
+        if (Plugin.MirrorViewmodel.Value) {
+            mat *= Matrix4x4.Scale(new Vector3(-1, 1, 1));
+        }
+        return mat;
+    }
+    
     // ok. that was the easy bit. now it's time to fix everything that broke!
     
     // needed to make the viewmodel customisation work on medium/low graphics
@@ -62,14 +75,11 @@ public static class ViewmodelModifier
             if (!__instance.IsOwner) return;
             ___cameras[0].cullingMask = ___highMask;
             WeaponCam = ___cameras[1];
-            m_originalProjectionMatrix = WeaponCam.projectionMatrix;
+            //m_originalProjectionMatrix = WeaponCam.projectionMatrix;
             m_armRenderers = ___fpArms.Select(obj => obj.GetComponent<SkinnedMeshRenderer>()).ToArray();
             
             // force the weapon camera to be enabled
             WeaponCam.enabled = true;
-            
-            // to prevent bullet trails from being cut off when being rendered by the weapon cam
-            WeaponCam.farClipPlane = 100;
             
             // if on medium/low graphics
             if (Settings.Instance.qualitySetting < 2) {
