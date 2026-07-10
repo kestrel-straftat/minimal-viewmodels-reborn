@@ -20,7 +20,8 @@ public static class MuzzleFlashModifier
         [HarmonyPatch("Awake")]
         [HarmonyPrefix]
         public static void ModifyBrightness(Weapon __instance, ref float ___lightIntensity, GameObject ___muzzleFlash) {
-            ___lightIntensity *= Plugin.MuzzleFlashLightIntensity.Value;
+            // TODO fix muzzle flash lights
+            //___lightIntensity *= Plugin.MuzzleFlashLightIntensity.Value;
         
             if (!___muzzleFlash || m_modifiedMuzzleFlashes.Contains(___muzzleFlash)) return;
             foreach (var system in ___muzzleFlash.GetComponentsInChildren<ParticleSystem>(true)) {

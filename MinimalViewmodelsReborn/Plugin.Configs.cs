@@ -73,12 +73,14 @@ public partial class Plugin
             false,
             "Hides bullet trails."
         );
+        /*
         MuzzleFlashLightIntensity = Config.Bind(
             "VFX.MuzzleFlashes",
             "Muzzle Flash Light Intensity",
             1f,
             "A multiplier applied to the light intensity of muzzle flashes. Requires a map restart to apply."
         );
+        */
         MuzzleFlashScale = Config.Bind(
             "VFX.MuzzleFlashes",
             "Muzzle Flash Scale",
