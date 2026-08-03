@@ -30,6 +30,15 @@
     <DevBuildDir>$(BepInExDir)plugins\kestrel-Minimal_Viewmodels_Reborn-dev\</DevBuildDir>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <PathMap>$(MSBuildProjectDirectory)=/,$(NuGetPackageRoot)=.nuget</PathMap>
+    <!-- source link will add metadata containing the path to the project on the build 
+    machine, completely ignoring PathMap (and isnt very useful anyways. sorry source link) -->
+    <EnableSourceLink>false</EnableSourceLink>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BepInEx.Analyzers" Version="1.0.8" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Core" Version="5.4.21" PrivateAssets="all" />
