@@ -33,6 +33,7 @@ public partial class Plugin : BaseUnityPlugin
         ViewmodelModifier.Apply();
         MuzzleFlashModifier.Apply();
         DynamicFovModifier.Apply();
+        ViewmodelAnimationModifier.Apply();
     }
 }
 

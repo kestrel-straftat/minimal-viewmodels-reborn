@@ -5,18 +5,29 @@ namespace MinimalViewmodelsReborn;
 
 public partial class Plugin
 {
+    // Viewmodels.Visibility
+    public static ConfigEntry<bool> InvisibleViewmodels { get; private set; }
+    public static ConfigEntry<bool> InvisibleArms { get; private set; }
+    public static ConfigEntry<float> ViewmodelFOV { get; private set; }
+    public static ConfigEntry<bool> MirrorViewmodel { get; private set; }
+    
+    // Viewmodels.Offset
     public static ConfigEntry<float> ViewmodelOffsetX { get; private set; }
     public static ConfigEntry<float> ViewmodelOffsetY { get; private set; }
     public static ConfigEntry<float> ViewmodelOffsetZ { get; private set; }
-    public static ConfigEntry<float> ViewmodelFOV { get; private set; }
-    public static ConfigEntry<bool> MirrorViewmodel { get; private set; }
-    public static ConfigEntry<bool> InvisibleViewmodels { get; private set; }
-    public static ConfigEntry<bool> InvisibleArms { get; private set; }
+    
+    // Viewmodels.Animation
+    public static ConfigEntry<float> ViewmodelSwayScale { get; private set; }
+    public static ConfigEntry<float> ViewmodelBobScale { get; private set; }
 
-    public static ConfigEntry<float> MuzzleFlashLightIntensity { get; private set; }
-    public static ConfigEntry<float> MuzzleFlashScale { get; private set; }
+    // VFX.General
     public static ConfigEntry<bool> HideBulletTrails { get; private set; }
     
+    // VFX.MuzzleFlashes
+    public static ConfigEntry<float> MuzzleFlashLightIntensity { get; private set; }
+    public static ConfigEntry<float> MuzzleFlashScale { get; private set; }
+
+    // DynamicFov.General
     public static ConfigEntry<float> RunFovIncrease { get; private set; }
     public static ConfigEntry<float> SlideFovIncrease { get; private set; }
     public static ConfigEntry<float> RunSlideFovIncrease { get; private set; }
@@ -24,6 +35,9 @@ public partial class Plugin
     public static Vector3 ViewmodelOffset => new(ViewmodelOffsetX.Value, ViewmodelOffsetY.Value, ViewmodelOffsetZ.Value);
 
     internal void InitConfigs() {
+        
+        // Viewmodels.Visibility
+        
         InvisibleViewmodels = Config.Bind(
             "Viewmodels.Visibility",
             "Invisible Viewmodels",
@@ -48,6 +62,9 @@ public partial class Plugin
             false,
             "Mirrors your viewmodel."
         );
+        
+        // Viewmodels.Offset
+        
         ViewmodelOffsetX = Config.Bind(
             "Viewmodels.Offset",
             "Viewmodel X Offset",
@@ -67,12 +84,32 @@ public partial class Plugin
             new ConfigDescription("Negative values will shift your held weapon back, Positive values will shift it forward.", new AcceptableValueRange<float>(-5, 5))
         );
 
+        // Viewmodels.Animation
+
+        ViewmodelSwayScale = Config.Bind(
+            "Viewmodels.Animation",
+            "Viewmodel Sway Scale",
+            1.0f,
+            new ConfigDescription("A multiplier applied to the viewmodel sway when moving the camera and jumping.", new AcceptableValueRange<float>(0, 2))
+        );
+        ViewmodelBobScale = Config.Bind(
+            "Viewmodels.Animation",
+            "Viewmodel Bob Scale",
+            1.0f,
+            new ConfigDescription("A multiplier applied to the viewmodel bobbing animation.", new AcceptableValueRange<float>(0, 2))
+        );
+        
+        // VFX.General
+        
         HideBulletTrails = Config.Bind(
             "VFX.General",
             "Hide Bullet Trails",
             false,
             "Hides bullet trails."
         );
+        
+        // VFX.MuzzleFlashes
+        
         /*
         MuzzleFlashLightIntensity = Config.Bind(
             "VFX.MuzzleFlashes",
@@ -88,6 +125,7 @@ public partial class Plugin
             "A multiplier applied to the scale of muzzle flashes. Requires a map restart to apply."
         );
         
+        // DynamicFov.General
 
         RunFovIncrease = Config.Bind(
             "DynamicFov.General",
