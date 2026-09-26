@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using BepInEx.Configuration;
 using HarmonyLib;
+using MinimalViewmodelsReborn.Utils;
 using UnityEngine;
 
 namespace MinimalViewmodelsReborn.Patches;
@@ -36,17 +37,21 @@ public static class ViewmodelAnimationModifier
 
         // ffs sirius
         [HarmonyPatch(nameof(FPArms.Update)), HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> ScaleHardcodedValue(IEnumerable<CodeInstruction> instructions) {
+        public static IEnumerable<CodeInstruction> ScaleHardcodedValues(IEnumerable<CodeInstruction> instructions) {
             return new CodeMatcher(instructions)
                 .MatchForward(true,
-                    new CodeMatch(OpCodes.Ldc_R4, 1.7f)
+                    new CodeMatch(OpCodes.Ldc_R4),
+                    new CodeMatch(OpCodes.Add)
                 )
-                .Advance(1)
-                .Insert(
-                    new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Plugin), nameof(Plugin.ViewmodelBobScale))),
-                    new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(ConfigEntry<float>), nameof(ConfigEntry<>.Value))),
-                    new CodeInstruction(OpCodes.Mul)
+                .Repeat(matcher => matcher
+                    .Advance(1)
+                    .Insert(
+                        new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Plugin), nameof(Plugin.ViewmodelBobScale))),
+                        new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(ConfigEntry<float>), nameof(ConfigEntry<>.Value))),
+                        new CodeInstruction(OpCodes.Mul)
+                    )
                 )
+                .Dump()
                 .InstructionEnumeration();
         }
     }
