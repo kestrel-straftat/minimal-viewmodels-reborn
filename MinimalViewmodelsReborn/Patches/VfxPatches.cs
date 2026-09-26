@@ -46,7 +46,7 @@ public static class VfxPatches
     }
     
     // fix layers of prefabs of eject case vfx
-    [HarmonyPatch(typeof(Weapon), "OnShoot")]
+    [HarmonyPatch(typeof(Weapon), nameof(Weapon.OnShoot))]
     public static class WeaponPatch
     {
         [HarmonyPrefix]
@@ -70,8 +70,7 @@ public static class VfxPatches
         private static IEnumerable<MethodBase> TargetMethods() =>
             TypeHelpers.WeaponTypes
                 .Except([typeof(BeamGun)]) // beam gun does its own thing (?????). see below
-                .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
-                .Where(m => m.Name.StartsWith("RpcLogic___ShootObserversEffect_"));
+                .GetRpcLogicMethods("ShootObserversEffect");
 
         [HarmonyPrefix]
         private static void SetVfxLayers(Weapon __instance, GameObject ___muzzleFlash) {
@@ -89,7 +88,7 @@ public static class VfxPatches
     // various special cases of the above
     // because being consistent would kill sirius instantly
     
-    [HarmonyPatch(typeof(DualLauncher), "Update")]
+    [HarmonyPatch(typeof(DualLauncher), nameof(DualLauncher.Update))]
     public static class DualLauncherPatch
     {
         [HarmonyPrefix]
@@ -112,7 +111,7 @@ public static class VfxPatches
     {
         [HarmonyTargetMethod]
         private static MethodBase TargetMethod() => 
-            typeof(BeamGun).GetRpcLogicMethod("ShootObserversEffect");
+            typeof(BeamGun).GetRpcLogicMethod(nameof(BeamGun.ShootObserversEffect));
         
         [HarmonyPrefix]
         public static void SetVfxLayers(BeamGun __instance, GameObject ___muzzleFlash2) {
@@ -132,7 +131,7 @@ public static class VfxPatches
     {
         [HarmonyTargetMethod]
         private static MethodBase TargetMethod() =>
-            typeof(BeamGun).GetRpcLogicMethod("ShootObserversEffect2");
+            typeof(BeamGun).GetRpcLogicMethod(nameof(BeamGun.ShootObserversEffect2));
         
         [HarmonyPrefix]
         public static void SetVfxLayers(BeamGun __instance, GameObject ___muzzleFlash) {
@@ -151,8 +150,7 @@ public static class VfxPatches
     [HarmonyPatch(typeof(WeaponHandSpawner))]
     public static class WeaponHandSpawnerPatch
     {
-        [HarmonyPatch("HandlePlacement")]
-        [HarmonyPostfix]
+        [HarmonyPatch(nameof(WeaponHandSpawner.HandlePlacement)), HarmonyPostfix]
         private static void FixPlacementHologram(Transform ___previewObject) {
             ___previewObject.GetChild(0).gameObject.layer = m_defaultLayer;
         }

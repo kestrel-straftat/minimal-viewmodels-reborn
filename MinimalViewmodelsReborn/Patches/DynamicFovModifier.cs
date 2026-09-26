@@ -17,8 +17,7 @@ public static class DynamicFovModifier
     [HarmonyPatch(typeof(FirstPersonController))]
     public static class FirstPersonControllerPatch
     {
-        [HarmonyPatch("Start")]
-        [HarmonyPostfix]
+        [HarmonyPatch(nameof(FirstPersonController.Start)), HarmonyPostfix]
         public static void ApplyOnStart(FirstPersonController __instance) {
             m_controller = __instance;
             Apply();

@@ -69,8 +69,7 @@ public static class ViewmodelModifier
     [HarmonyPatch(typeof(PlayerSetup))]
     public static class PlayerSetupPatch
     {
-        [HarmonyPatch("OnStartClient")]
-        [HarmonyPostfix]
+        [HarmonyPatch(nameof(PlayerSetup.OnStartClient)), HarmonyPostfix]
         private static void FixCameras(PlayerSetup __instance, Camera[] ___cameras, LayerMask ___highMask, GameObject[] ___fpArms) {
             if (!__instance.IsOwner) return;
             ___cameras[0].cullingMask = ___highMask;

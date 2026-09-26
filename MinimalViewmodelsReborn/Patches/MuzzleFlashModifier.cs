@@ -17,8 +17,7 @@ public static class MuzzleFlashModifier
     [HarmonyPatch(typeof(Weapon))]
     public static class WeaponPatch
     {
-        [HarmonyPatch("Awake")]
-        [HarmonyPrefix]
+        [HarmonyPatch(nameof(Weapon.Awake)), HarmonyPrefix]
         public static void ModifyBrightness(Weapon __instance, ref float ___lightIntensity, GameObject ___muzzleFlash) {
             // TODO fix muzzle flash lights
             //___lightIntensity *= Plugin.MuzzleFlashLightIntensity.Value;
