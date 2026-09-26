@@ -44,14 +44,12 @@ public static class ViewmodelAnimationModifier
                     new CodeMatch(OpCodes.Add)
                 )
                 .Repeat(matcher => matcher
-                    .Advance(1)
                     .Insert(
                         new CodeInstruction(OpCodes.Call, AccessTools.PropertyGetter(typeof(Plugin), nameof(Plugin.ViewmodelBobScale))),
                         new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(ConfigEntry<float>), nameof(ConfigEntry<>.Value))),
                         new CodeInstruction(OpCodes.Mul)
                     )
                 )
-                .Dump()
                 .InstructionEnumeration();
         }
     }
