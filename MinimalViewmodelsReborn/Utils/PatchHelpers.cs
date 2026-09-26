@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
 
 namespace MinimalViewmodelsReborn.Utils;
 
@@ -17,5 +18,12 @@ internal static class PatchHelpers
         return types
             .SelectMany(t => t.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic))
             .Where(m => m.Name.StartsWith("RpcLogic___" + methodName + "_"));
+    }
+
+    internal static CodeMatcher Dump(this CodeMatcher matcher) {
+        foreach (var instr in matcher.InstructionEnumeration()) {
+            Plugin.Logger.LogWarning(instr);
+        }
+        return matcher;
     }
 }
