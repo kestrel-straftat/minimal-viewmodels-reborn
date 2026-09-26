@@ -1,3 +1,7 @@
+### v1.4.8
+
+- Added new options `Viewmodel Sway Scale` and `Viewmodel Bob Scale` to allow customisation of the viewmodel's animations
+
 ### v1.3.8
 
 - Fixed viewmodel FOV not working
